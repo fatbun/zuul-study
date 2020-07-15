@@ -1,0 +1,37 @@
+server:
+  port:
+    8080
+
+spring:
+  application:
+    name: Zuul-Server
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://euk1.com:7001/eureka/,http://euk2.com:7002/eureka
+
+# 给 eureka-consumer 服务变更负载均衡策略为 随机策略
+eureka-consumer:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+# 打开路由端点。调试的时候，看网关请求的地址，以及 映射是否正确。网关请求有误时，可以通过此处排查错误
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      enabled: true
+    routes:
+      enabled: true
+
+# 请求转发
+zuul:
+  routes:
+    eureka-consumer:
+      path: /xxoo/**
+      url: http://mashibing.com
